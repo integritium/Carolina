@@ -13,7 +13,7 @@
 <img src="google-research.png" width=220>
 </center>
 <center style="margin-top:10px;"><img src="ssrn.png" width=150 style="margin-right: 20px;"><img src="elsevier.png" width=210 style="margin-right: 10px;"> <img src="microsoft.png" width=125> </center>
-<center><img src="doaj.png" width=250></center>
+<center><img src="doaj.png" width=250><img src="jetbrains.svg" style="padding-bottom: 20px;" width=250></center>
 
 ---
 # [[Natural-Language Agent Harnesses]]
