@@ -62,4 +62,9 @@
 ![](https://images.unsplash.com/photo-1529078155058-5d716f45d604?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
 
 ---
+# [[0. MOC - Aspect Aware Recommendations| Aspect-Aware Content-Based Recommendations for Mathematical Research Papers]]
+
+![[math_rec_network.png]]
+
+---
 
