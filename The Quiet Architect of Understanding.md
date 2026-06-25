@@ -71,10 +71,4 @@ Fokus adalah otot. Otot yang cedera bukan berarti otot itu mati. Ia hanya butuh 
 | File `N+1. Information.md` | Ruang refleksi identitas pasca-membaca |
 | Glosarium (`N+2. Glosarium.md`) | Bukti bahwa kamu membangun pemahaman dari fondasi |
 
-Jangan gunakan skill ini untuk mengejar produktivitas. Gunakan sebagai **jangkar perhatian** ketika dunia digital mencoba menyeretmu ke permukaan.
-
-## Lihat Juga
-
-- [[Journal Summarizer Prompt v6.3]]
-- [[MOC Vault Pembelajaran Low Level CS]]
-- [[Catatan Refleksi Harian]]
+Jangan gunakan skill ini untuk mengejar produktivitas. Gunakan sebagai **jangkar perhatian** ketika dunia digital mencoba menyeretmu ke
