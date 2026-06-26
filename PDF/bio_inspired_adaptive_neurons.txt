@@ -1,0 +1,2962 @@
+ 
+Contents lists available at ScienceDirect
+AI Open
+journal homepage: www.elsevier.com/locate/aiopen
+ 
+Full length article
+Bio-inspired adaptive neurons for dynamic weighting in Artificial Neural 
+Networks
+Ashhadul Islam a
+, Abdesselam Bouzerdoum a,b
+, Samir Brahim Belhaouari a
+,∗
+a College Of Science & Engineering, Hamad Bin Khalifa University, Education City, Doha, 34110, Qatar
+b School of Electrical, Computer & Telecommunications Engineering, University of Wollongong, Address Two, Wollongong, 2500, New South Wales, Australia
+A R T I C L E  I N F O
+Keywords:
+Adaptive neural networks
+Dynamic weighting
+Input-dependent weights
+Neural network generalization
+Chebyshev polynomials
+ 
+A B S T R A C T
+Traditional neural networks employ fixed weights during inference, limiting their ability to adapt to changing 
+input conditions, unlike biological neurons that adjust signal strength dynamically based on stimuli. This 
+discrepancy between artificial and biological neurons constrains neural network flexibility and adaptability. 
+To bridge this gap, we propose a novel framework for adaptive neural networks, where neuron weights are 
+modeled as functions of the input signal, allowing the network to adjust dynamically in real-time. Importantly, 
+we achieve this within the same traditional architecture of an Artificial Neural Network, maintaining structural 
+familiarity while introducing dynamic adaptability. In our research, we apply Chebyshev polynomials as one 
+of the many possible decomposition methods to achieve this adaptive weighting mechanism, with polynomial 
+coefficients learned during training. Of the 145 datasets tested, our adaptive Chebyshev neural network 
+demonstrated a marked improvement over an equivalent MLP in approximately 83% of the cases, performing 
+strictly better on 121 datasets. In the remaining 24 datasets, the performance of our algorithm matched that 
+of the MLP, highlighting its ability to generalize the behavior of standard neural networks while offering 
+enhanced adaptability. As a generalized form of MLP, this model seamlessly retains MLP performance where 
+needed while extending its capabilities to achieve superior accuracy across a wide range of complex tasks. 
+These results underscore the potential of adaptive neurons to enhance generalization, flexibility, and robustness 
+in neural networks, particularly in applications with dynamic or non-linear data dependencies.
+1. Introduction
+1.1. Biological basis of neurons and their inspiration for Artificial Neural 
+Networks
+Human neurons are specialized cells responsible for transmitting 
+signals within the brain and nervous system, enabling cognition, sen-
+sation, and motor control. The response of neurons to input signals is 
+inherently nonlinear. Neurons exhibit threshold behavior, where they 
+fire action potentials only when the input surpasses a certain thresh-
+old (Koch, 2004). Below this threshold, the neuron remains inactive, 
+regardless of slight variations in input. Furthermore, neurons integrate 
+signals over time through temporal summation, where multiple inputs 
+arriving within a short time window can summate, potentially pushing 
+the neuron past its threshold. Spatial summation also occurs, where 
+inputs from different locations on the dendrites have varying effects 
+on the soma, depending on their proximity and strength (Bliss and 
+Collingridge, 1993). Another important factor contributing to nonlin-
+earity is synaptic plasticity, where the strength of synaptic connections 
+∗Corresponding author.
+E-mail address: sbelhaouari@hbku.edu.qa (S.B. Belhaouari).
+changes based on prior activity, thus modifying how neurons communi-
+cate over time. The nonlinear, dynamic behavior of biological neurons, 
+particularly through mechanisms like synaptic plasticity and action 
+potentials, has inspired our approach to adaptive neurons. Biological 
+neurons adjust their responses based on the input signal’s intensity 
+and timing, a process we aim to emulate in artificial neurons using 
+Chebyshev polynomials. By incorporating input-dependent adaptive 
+weights, we propose a model that mirrors the biological neuron’s ability 
+to integrate complex signals nonlinearly. This provides the flexibility 
+needed to capture intricate patterns in data, much like how biological 
+systems process information.
+1.2. Chebyshev framework
+To enable neurons to adapt their responses to varying input con-
+ditions, we replace the fixed weights of conventional neural networks 
+with input-dependent weights modeled using Chebyshev polynomial 
+expansions (Mason and Handscomb, 2002). Let 𝑥𝑖 represent the input 
+https://doi.org/10.1016/j.aiopen.2026.02.001
+Received 15 December 2024; Received in revised form 29 November 2025; Accepted 3 February 2026
+AI Open 7 (2026) 1–17 
+Available online 5 February 2026 
+2666-6510/© 2026 The Authors. Publishing services by Elsevier B.V. on behalf of KeAi Communications Co. Ltd. This is an open access article under the CC BY 
+license ( http://creativecommons.org/licenses/by/4.0/ ). 
+A. Islam et al.
+to the neuron and 𝑤𝑖 represent the adaptive weight associated with the 
+input 𝑥𝑖. The adaptive weight is defined as: 
+𝑤𝑖(𝑥𝑖) =
+𝑘
+∑
+𝑗=0
+𝑐𝑖,𝑗𝑇𝑗(𝑥𝑖)
+(1)
+where 𝑐𝑖,𝑗 are the learnable coefficients, 𝑇𝑗(𝑥𝑖) represents the Chebyshev 
+polynomial of the first kind of order 𝑗 evaluated at 𝑥𝑖, and 𝑘 is the 
+polynomial order. The neuron’s output is then computed as: 
+Neuron Output: 𝑦=
+𝑛
+∑
+𝑖=1
+𝑥𝑖⋅𝑤𝑖(𝑥𝑖) =
+𝑛
+∑
+𝑖=1
+𝑥𝑖⋅
+𝑘
+∑
+𝑗=0
+𝑐𝑖,𝑗𝑇𝑗(𝑥𝑖)
+(2)
+This formulation introduces dynamic weighting, allowing each
+weight to change smoothly as a function of the input. Such behav-
+ior mirrors biological neurons, whose synaptic strengths vary based 
+on stimulus intensity, enabling more flexible and context-sensitive 
+processing.
+Chebyshev polynomials are particularly well suited for this adaptive 
+weighting mechanism due to several desirable mathematical proper-
+ties. Their orthogonality reduces redundancy when modeling complex 
+input–weight relationships, while their minimax approximation behav-
+ior promotes stable learning and mitigates large approximation errors. 
+Additionally, their efficient recursive computation allows higher-order 
+polynomial terms to be evaluated with minimal computational over-
+head. Together, these characteristics provide a balance of expressive-
+ness, numerical stability, and efficiency. The mathematically foun-
+dational properties of Chebyshev polynomials is explained for inter-
+ested readers in Appendix A. Leveraging these properties, the proposed 
+Chebyshev-based adaptive neuron offers several advantages (Mason 
+and Handscomb, 2002; Trefethen, 2019; Rivlin, 1990):
+• Dynamic Weight Adaptation: Each weight adjusts continuously 
+to changing inputs, improving flexibility compared to static-
+weight neurons.
+• Improved Generalization: Orthogonality and strong approxima-
+tion capability help prevent overfitting, especially in nonlinear 
+tasks.
+• Computational Efficiency: Recursive evaluation ensures the
+adaptive mechanism remains lightweight and scalable.
+• Numerical 
+Stability: 
+Minimax 
+characteristics 
+and
+well-distributed roots support stable interpolation and learning 
+dynamics.
+While other orthogonal bases such as Legendre or Hermite polyno-
+mials could also be used, Chebyshev polynomials provide a more fa-
+vorable balance between approximation accuracy, numerical stability, 
+and computational efficiency. These attributes make them especially 
+well-suited for adaptive neural architectures that aim to dynamically 
+adjust weights in response to input stimuli. These properties, along 
+with the dynamic nature of the proposed adaptive neuron model, 
+open up new possibilities for designing neural networks that are more 
+flexible, robust, and capable of handling non-linear and complex data 
+patterns effectively. The implementation of this adaptive Chebyshev 
+neural network framework is openly shared in our GitHub repository 
+for reproducibility and further research.1
+Contributions. This work makes the following key contributions:
+• Adaptive Chebyshev Neuron: We introduce a novel neuron 
+whose weights are explicit functions of the input, modeled using 
+Chebyshev polynomial expansions.
+• Generalization of the MLP: Our formulation retains the struc-
+ture of a standard multilayer perceptron while extending it to 
+support dynamic, input-dependent weighting.
+1 https://github.com/ashhadulislam/chebyshev-neural-networks
+• Efficient and Stable Implementation: We show that Cheby-
+shev polynomials provide an efficient and numerically stable 
+mechanism for real-time adaptive weighting.
+• Extensive Empirical Validation: Across 145 datasets, our adap-
+tive Chebyshev neural network achieves improved performance 
+over a standard MLP in 83
+• Open-Source Framework: We release a complete implementa-
+tion to enable further research and reproducibility.
+2. Related work
+Research on adaptive neural architectures spans several directions, 
+including example-dependent computation, dynamic parameterization, 
+polynomial-based models, spiking mechanisms, and networks that re-
+place static weights with learnable functions. Below we summarize the 
+most relevant lines of work and highlight how our approach differs.
+2.1. Adaptive computation in neural networks
+A prominent class of adaptive models focuses on reducing inference 
+cost by adjusting the amount of computation per example. This includes 
+early-exit architectures and adaptive subnetwork selection (Bolukbasi 
+et al., 2017), where simpler examples are routed through shallow 
+modules while more challenging cases trigger deeper evaluation. These 
+methods improve efficiency but do not modify weights as a function of 
+the input; the underlying parameters remain fixed during inference.
+2.2. Dynamic weighting and conditional parameterization
+Several approaches introduce dynamically generated parameters 
+based on input features, such as attention mechanisms, conditionally 
+parameterized convolutions (CondConv) (Yang et al., 2019), dynamic 
+convolutions (Chen et al., 2020), and deformable convolutions (Dai 
+et al., 2017). These methods combine multiple pre-learned kernels 
+or spatial offsets using learned gating or attention scores. Although 
+they incorporate input dependence, the generated weights are typically 
+derived from small auxiliary networks and do not use an explicit 
+functional decomposition of weights. In contrast, our model defines 
+each weight directly as a polynomial function of the input, providing a 
+principled and interpretable functional form.
+2.3. Chebyshev polynomials in neural architectures
+Chebyshev polynomials have been used in neural networks for 
+feature expansion, spectral graph convolution, and function approx-
+imation. Most relevant is the work of Troumbis et al. (2020), who 
+construct a multilayer model whose activations incorporate truncated 
+Chebyshev series and whose parameters are optimized via Differential 
+Evolution. Their formulation uses polynomials to approximate the net-
+work output itself rather than the weights of individual neurons, and 
+does not provide input-dependent weight dynamics or compatibility 
+with gradient-based learning. We formalize these distinctions explicitly 
+below.
+2.3.1. Differences from Troumbis et al. (2020)
+While both our work and Troumbis et al. (2020) utilize Chebyshev 
+polynomials within neural architectures, the underlying philosophy, 
+design, and learning mechanisms differ significantly:
+• Static vs. Adaptive Weighting: Troumbis et al. employ Cheby-
+shev polynomials as part of a fixed series expansion to approxi-
+mate the network output. In contrast, our method uses Chebyshev 
+polynomials to define input-dependent adaptive weights at the 
+neuron level. This dynamic formulation allows weights to change 
+with varying input stimuli, thereby offering greater biological 
+plausibility and flexibility.
+AI Open 7 (2026) 1–17 
+2 
+A. Islam et al.
+• Learning Mechanism: Troumbis et al. use a population-based op-
+timization technique (Differential Evolution) for training, which 
+does not rely on gradient descent. Our model, on the other hand, 
+is trained using standard backpropagation, making it compatible 
+with mainstream deep learning frameworks and scalable to larger 
+datasets and architectures.
+• Architectural Scope and Generality: The model in Troumbis 
+et al. is tailored to specific regression problems with a fixed 
+architectural structure. Our model generalizes this by integrating 
+polynomial-based adaptive weights directly into the neuron for-
+mulation, making it applicable across a broad range of tasks (clas-
+sification, regression) and easily extensible to other orthogonal 
+decompositions beyond Chebyshev.
+• Biological Motivation and Neural Interpretation: While
+Troumbis et al. focus primarily on mathematical function ap-
+proximation, our formulation is bio-inspired—aiming to model 
+the dynamic response characteristics of biological neurons where 
+synaptic strength adapts in real-time based on the nature of 
+incoming signals.
+In summary, our approach significantly extends the scope and ap-
+plicability of Chebyshev-based neural models by introducing dynamic 
+adaptability, backpropagation-based learning, and broader architec-
+tural generalization, thereby addressing a different set of scientific and 
+practical challenges.
+2.4. Spiking Neural Networks and biological adaptation
+Spiking Neural Networks (SNNs) incorporate temporal coding and 
+event-driven communication inspired by biological neurons (Guo et al., 
+2023). Training strategies such as ANN-to-SNN conversion (Han and 
+Roy, 2020) and surrogate gradient learning (Fang et al., 2021) enable 
+SNNs to approximate continuous neural models. Adaptive SNNs fur-
+ther introduce mechanisms like spike-frequency adaptation (Zambrano 
+et al., 2019). While SNNs emulate biological temporal dynamics, they 
+rely on nondifferentiable spike events and discrete communication. 
+Our model shares the goal of biological inspiration but instead uses 
+continuous, differentiable weight functions, making it directly trainable 
+with backpropagation and applicable to standard deep learning tasks.
+2.5. Functional weight representations and inspiration from KANs
+Kolmogorov–Arnold Networks (KANs) (Liu et al., 2024) replace 
+fixed scalar weights with learnable univariate functions defined on the 
+edges, improving expressivity relative to standard MLPs. This architec-
+tural idea, representing weights as functions, motivates our framework. 
+Unlike KANs, which use spline-based activations, we employ Chebyshev 
+polynomial expansions to parameterize weights as explicit functions 
+of the input. This yields smooth, interpretable, and computationally 
+efficient adaptive weights while retaining the familiar structure of an 
+MLP.
+3. Proposed architecture
+This section introduces the adaptive neuron model in which each 
+weight is replaced by an input-dependent function modeled through 
+Chebyshev polynomial expansion. The architectural structure remains 
+identical to a standard multilayer perceptron (MLP), ensuring compat-
+ibility with existing deep learning workflows while enabling dynamic 
+weight modulation.
+3.1. Adaptive neuron with Chebyshev weight functions
+In a conventional neuron, the output is computed using fixed 
+weights that do not change during inference. To introduce biological-
+style adaptability, we replace each static weight 𝑤𝑖 with a function of 
+its corresponding input 𝑥𝑖. Specifically, each weight is expressed as a 
+Chebyshev polynomial expansion: 
+𝑤𝑖(𝑥𝑖) =
+𝑘
+∑
+𝑗=0
+𝑐𝑖,𝑗𝑇𝑗(𝑥𝑖),
+(3)
+where 𝑇𝑗(⋅) denotes the Chebyshev polynomial of degree 𝑗 and 𝑐𝑖,𝑗
+are learnable coefficients. This formulation allows each weight to vary 
+smoothly with the input, providing a flexible mechanism to capture 
+nonlinear interactions without altering the standard MLP topology.
+Given these adaptive weights, the neuron output becomes: 
+𝑦=
+𝑛
+∑
+𝑖=1
+𝑥𝑖𝑤𝑖(𝑥𝑖).
+(4)
+This adaptive neuron is a drop-in replacement for a standard lin-
+ear layer, and the remainder of the network architecture remains 
+unchanged.
+3.2. Efficient polynomial transformation
+To implement Eq. (3) efficiently, we precompute the Chebyshev 
+basis expansion for each input: 
+Cheb(𝑥𝑖) = [𝑇0(𝑥𝑖), 𝑇1(𝑥𝑖), … , 𝑇𝑘(𝑥𝑖)].
+(5)
+This transformation is applied elementwise to the input vector 
+before the linear layer. The resulting basis vectors are then multiplied 
+by the learnable coefficients 𝑐𝑖,𝑗. Because Chebyshev polynomials are 
+computed recursively, the overhead of this expansion is low and scales 
+linearly with the polynomial order 𝑘.
+Fig. 1 illustrates this process: each input feature is expanded into a 
+set of polynomial terms, which are linearly combined to produce the 
+adaptive weight used in the neuron computation.
+3.3. Layer integration
+The adaptive neuron integrates cleanly into a fully connected layer. 
+For an input vector 𝐱∈R𝑛, the Chebyshev-transformed tensor has 
+dimension 𝑛× (𝑘+ 1). The learnable coefficients 𝑐𝑖,𝑗 form a correspond-
+ing parameter matrix. The final adaptive layer output is obtained by 
+evaluating Eq. (4) for all neurons in the layer.
+This formulation preserves the expressiveness of MLPs while aug-
+menting them with dynamic, input-aware behavior.
+3.4. Training and optimization
+All parameters 𝑐𝑖,𝑗 are trained directly through standard backprop-
+agation. Automatic differentiation computes the required gradients 
+using the chain rule applied to Eqs. (3)–(4). The model is optimized 
+using Adam, which provides stable convergence for the polynomial 
+coefficient updates.
+Because the architecture remains fully differentiable and struc-
+turally identical to an MLP aside from the weight functions, training 
+and scalability are unchanged from standard feedforward networks.
+AI Open 7 (2026) 1–17 
+3 
+A. Islam et al.
+Fig. 1. Architecture of the adaptive neuron using Chebyshev polynomial expansion. Each input feature 𝑥𝑖 is transformed into its polynomial basis representation, 
+enabling dynamic, input-dependent weighting.
+Fig. 2. Dataset statistics across the 145 PMLB datasets: (a) number of samples, (b) number of features, and (c) number of classes.
+4. Data and experiment
+4.1. Datasets
+Experiments were conducted on 145 classification datasets from the 
+Penn Machine Learning Benchmarks (PMLB) (Olson et al., 2017). These 
+datasets span a wide range of sizes (42–105,908 samples), dimensional-
+ities (2–1000 features), and label complexities (2–26 classes), providing 
+a diverse and rigorous test bed for evaluating model robustness. Fig. 
+2 summarizes the distribution of dataset sizes, feature dimensions, and 
+target classes. This diversity ensures that the proposed adaptive neuron 
+model is evaluated across both low-dimensional and high-dimensional 
+tasks, as well as binary and multi-class problems. A more detailed 
+description of all datasets used can be found in Appendix D.
+4.2. Experiment framework
+The experiment compares a standard MLP with the proposed
+Chebyshev-enhanced model using identical architectures and training 
+procedures. For each dataset:
+1. Split data into training and test sets.
+2. Train an MLP ten times; record the best test accuracy.
+3. Train the Chebyshev model ten times on the same split; record 
+the best test accuracy.
+Fig. 3 illustrates the workflow of our experiment, showing the 
+repeated training and evaluation steps for each model type. This pro-
+cedure ensures a fair, variance-reduced comparison.
+4.2.1. Model architecture
+Both models use the same three-layer topology: 4 neurons in the 
+first layer, 2 in the second layer, and an output layer matching the 
+number of classes. The Chebyshev model applies a degree-3 Chebyshev 
+expansion to the input of each layer, but otherwise matches the MLP 
+architecture exactly.
+Fig. 3. Experiment workflow for training and evaluating the MLP and Cheby-
+shev models.
+4.2.2. Training setup
+Both models are trained under identical conditions:
+• Learning rate: 0.001
+• Activation: ReLU
+• Optimizer: Adam
+• Epochs: 500
+This uniform setup isolates the effect of adaptive weighting.
+4.3. Pruning to leverage higher-order Chebyshev terms
+We additionally investigated higher-order Chebyshev expansions 
+(up to degree 6) combined with post-training pruning to reduce model 
+size. Surprisingly, pruned models often outperformed their unpruned 
+counterparts, demonstrating that higher-order expressivity followed by 
+sparsification yields compact and accurate models.
+AI Open 7 (2026) 1–17 
+4 
+A. Islam et al.
+Fig. 4. Adaptive weight behavior for the ‘‘phoneme’’ dataset across the first-
+layer neurons.
+Fig. 5. Decision boundary comparison on the ‘‘solar_flare_1’’ dataset. Pink 
+regions indicate misclassifications.
+4.3.1. Pruning strategy 1: Parameter thresholding
+The first strategy removes parameters whose magnitudes fall below 
+a threshold. Pruning proceeds layer-wise: 
+𝑊(𝑙∗) = Prune
+(
+𝑊(𝑙) ∣𝑊(1∗), … , 𝑊((𝑙−1)∗))
+(6)
+where pruned weights (denoted with *) are frozen during fine-tuning 
+while non-zero weights remain trainable.
+4.3.2. Pruning strategy 2: Chebyshev-aware grouped pruning
+To exploit the structure of the Chebyshev expansion, we compute 
+an aggregate norm for each feature: 
+‖𝑤𝑖‖2 =
+√
+√
+√
+√
+√
+𝑘
+∑
+𝑗=0
+𝑐2
+𝑖,𝑗.
+(7)
+If ‖𝑤𝑖‖2 is below a pruning threshold, all coefficients {𝑐𝑖,𝑗} for 
+that feature are removed together. This grouped approach preserves 
+interpretability and removes entire low-impact feature expansions.
+4.4. Input–weight relationship analysis
+To illustrate adaptive behavior, we visualize how weights vary with 
+inputs for two representative datasets. Fig. 4 shows smooth, continuous 
+weight responses across features, reflecting the dynamic adaptation 
+enabled by the Chebyshev representation. More such examples are in 
+Appendix B.
+Fig. 6. Decision boundary comparison on the ‘‘Hill Valley without noise’’ 
+dataset.
+Fig. 7. Accuracy comparison across 145 datasets: points above the diagonal 
+indicate Chebyshev outperforming the MLP.
+4.5. Decision boundary analysis
+To assess expressiveness, we examined decision boundaries on chal-
+lenging datasets. Fig. 5 compares the MLP and Chebyshev models on 
+the ‘‘solar_flare_1’’ dataset with five nonlinear classes. The Chebyshev 
+model captures significantly more complex structures and yields fewer 
+misclassifications. A similar trend is observed in the ‘‘Hill Valley with-
+out noise’’ dataset (Fig. 6), where the Chebyshev model captures the 
+underlying nonlinear decision boundary far more accurately. More such 
+examples can be found in Appendix C.
+These analyses highlight the expressive advantage of adaptive
+Chebyshev neurons in modeling complex, nonlinear decision bound-
+aries.
+5. Results and discussion
+We evaluated the Chebyshev Adaptive Network against a baseline 
+MLP across 145 PMLB datasets. Results consistently show that dynamic, 
+input-dependent weights provide substantial performance gains while 
+maintaining architectural simplicity.
+5.1. Overall accuracy comparison
+Fig. 7 summarizes the comparison. In 74% of datasets, the Cheby-
+shev model achieves higher accuracy than the MLP; in the remaining 
+cases it performs equivalently. Importantly, these gains arise without 
+increasing parameter count or altering the MLP’s overall structure. 
+The adaptive Chebyshev weights enable more expressive modeling of 
+nonlinear relationships, improving generalization especially on com-
+plex datasets. The complete accuracy results for all datasets, showing 
+the performance of the Chebyshev Adaptive Model compared with a 
+standard MLP can be found in Appendix E.
+AI Open 7 (2026) 1–17 
+5 
+A. Islam et al.
+Table 1
+Datasets with the largest performance gains of the Chebyshev model over the 
+MLP.
+ Dataset
+Gain (%)
+Size
+Features
+Classes 
+ auto
+26.83
+121
+25
+5
+ 
+ vowel
+26.26
+594
+13
+11
+ 
+ analcatdata fraud
+22.22
+25
+11
+2
+ 
+ soybean
+21.48
+405
+35
+18
+ 
+ tic tac toe
+19.27
+574
+9
+2
+ 
+ letter
+18.42
+12 000
+16
+26
+ 
+ movement libras
+15.28
+216
+90
+15
+ 
+ ring
+13.04
+4440
+20
+2
+ 
+ car
+12.72
+1036
+6
+4
+ 
+ hayes roth
+12.50
+96
+4
+3
+ 
+5.2. When does the Chebyshev model perform best?
+To understand where gains are largest, Table 1 presents the datasets 
+with the largest accuracy improvements. Several trends emerge:
+• High-dimensional inputs: Datasets such as movement libras (90 
+features) show large gains, suggesting that adaptive weighting 
+effectively captures complex interactions.
+• Multi-class problems: Tasks with many classes (vowel, letter,
+soybean) benefit from richer decision boundaries.
+• Small and medium data: Many top-gain datasets have under 
+1000 samples, indicating strong regularization and generalization 
+even with limited data.
+These patterns highlight the model’s strength in settings character-
+ized by nonlinear structure, many features, or complex label distribu-
+tions.
+5.3. Error analysis
+Although the Chebyshev network improves performance on most 
+datasets, underperformance occurs in specific scenarios:
+• Very small datasets (< 100 samples), where polynomial expan-
+sion increases overfitting risk.
+• Low-dimensional datasets with only a few features, limiting the 
+benefit of adaptive decompositions.
+• Linearly separable binary tasks, where additional expressivity 
+provides no advantage.
+These observations suggest that adaptivity is most useful in nonlin-
+ear or moderately complex settings, while simple tasks may not justify 
+additional flexibility.
+5.4. Comparison with MLPs of equal or larger parameter count
+To ensure that performance improvements are not simply due to 
+increased model capacity, we compared Chebyshev networks against 
+MLPs that were matched or exceeded in parameter count. Table 2 
+summarizes these results. The column ‘‘CB F1’’ reports the F1-score 
+of the Chebyshev-based (CB) model and its corresponding number of 
+parameters, while ‘‘MLP F1’’ lists the F1-score and parameter count 
+of the matched MLP. The final column, ‘‘Imp’’, reports the absolute 
+improvement in F1-score achieved by the Chebyshev model over the 
+MLP. Across all datasets, the Chebyshev architecture consistently out-
+performs the parameter-matched MLP, indicating that the gains arise 
+from adaptive weight functions rather than increased model size.
+Table 2
+F1-score comparison between Chebyshev models and parameter-matched MLPs.
+ Dataset
+CB F1# Params
+MLP F1# Params
+Imp  
+ analcatdata fraud
+60.51 (8322)
+39.68 (8546)
+20.83 
+ hayes roth
+77.87 (7011)
+68.75 (7235)
+9.12  
+ auto
+74.80 (11109)
+66.00 (11333)
+8.80  
+ movement libras
+86.36 (23919)
+80.50 (24143)
+5.86  
+ car
+97.67 (7428)
+92.38 (7652)
+5.29  
+ tic tac toe
+95.83 (7938)
+92.14 (8162)
+3.69  
+ soybean
+89.42 (13458)
+87.09 (13682)
+2.33  
+ ring
+96.82 (10050)
+96.62 (10274)
+0.20  
+ vowel
+94.50 (9003)
+94.46 (9227)
+0.04  
+Fig. 8. Effect of Chebyshev order 𝑘 on test F1-scores.
+5.5. Effect of polynomial order 𝑘
+Increasing 𝑘 enriches representational capacity but also raises risk 
+of overfitting. Fig. 8 shows that performance improves initially but 
+deteriorates for large 𝑘. This behavior confirms that while the adap-
+tive Chebyshev network generalizes the MLP (which corresponds to 
+𝑘= 0), an improperly chosen 𝑘 can lead to overparameterization and 
+poor generalization. Optimal values of 𝑘 vary by dataset, suggesting 
+future work on automated selection schemes (e.g., cross-validation or 
+Bayesian optimization).
+5.6. Computational efficiency analysis
+To assess the computational overhead introduced by adaptive
+weighting, we compared training and inference times of MLPs, Atten
+tion-based FCNNs, Hypernetwork-based FCNNs, and Chebyshev-
+enhanced FCNNs across synthetic datasets with increasing feature 
+dimensionality. As expected, MLPs remained the fastest across all 
+settings, while attention and hypernetwork architectures incurred mod-
+erate slowdowns. Chebyshev models exhibited the highest compu-
+tational cost, with runtime increasing as both input dimensionality 
+and polynomial order 𝑘 grew, reflecting the expense of polynomial 
+feature expansions. Despite this overhead, the trade-off is justified by 
+the substantial gains in adaptability and expressiveness demonstrated 
+in our results. A full breakdown of training and inference behavior, 
+including per-model scaling patterns and runtime plots, is provided in 
+Appendix G.
+5.7. Performance after pruning
+Pruning higher-order Chebyshev models produced substantial com-
+pression while improving accuracy on many datasets. Table 3 highlights 
+datasets with the highest compression (up to 89%) where pruned mod-
+els outperform both MLPs and unpruned Chebyshev networks. For a 
+AI Open 7 (2026) 1–17 
+6 
+A. Islam et al.
+Table 3
+Accuracy and compression results for pruned Chebyshev models. MLP Acc
+reports baseline MLP accuracy; Pruned CB Acc shows accuracy of the pruned 
+Chebyshev (CB) model; Comp denotes the percentage reduction in parameters 
+achieved through pruning.
+ Dataset
+MLP Acc
+Pruned CB Acc
+Comp  
+ wdbc
+98.25
+99.12
+89.2% 
+ credit a
+84.06
+84.78
+89.1% 
+ tokyo1
+93.23
+93.75
+86.3% 
+ breast
+100
+100
+85.8% 
+ pima
+78.57
+79.22
+82.9% 
+ cmc
+57.29
+57.63
+80.3% 
+ cleveland nominal
+59.02
+60.66
+79.7% 
+Table 4
+F1-score comparison between Chebyshev networks and two input-
+dependent baselines: Attention FCNN (self-attention–based) and Hyper 
+FCNN (hypernetwork-generated weights). For each model, the number 
+of trainable parameters is shown in parentheses. The table illustrates 
+that Chebyshev networks remain competitive—often outperforming both 
+baselines—despite using a simpler adaptive-weight mechanism.
+ Dataset
+Chebyshev
+Attention FCNN
+Hyper FCNN  
+ analcatdata fraud
+60.51 (8322)
+58.46 (8482)
+75.00 (8570)  
+ hayes roth
+77.87 (7011)
+75.24 (7431)
+80.02 (7171)  
+ movement libras
+86.36 (23919)
+84.14 (24161)
+80.09 (24545) 
+ tic tac toe
+95.83 (7938)
+90.76 (8186)
+97.72 (8018)  
+ soybean
+89.42 (13458)
+91.85 (14050)
+92.47 (13870) 
+ ring
+96.82 (10050)
+81.20 (10520)
+96.69 (10336) 
+ vowel
+94.50 (9003)
+97.38 (9299)
+97.63 (9281)  
+complete review of cases where accuracy gains were achieved through 
+pruning refer to Appendix F.
+These results demonstrate that Chebyshev networks are highly 
+amenable to pruning, enabling compact, high-accuracy models.
+5.8. Comparison with attention and hypernetworks
+We compared Chebyshev models with two other input-dependent 
+architectures: self-attention FCNNs (Vaswani et al., 2017) and hyper-
+networks (Ha et al., 2016). Table 4 shows that Chebyshev networks re-
+main competitive, outperforming these models on several datasets and 
+remaining close on others—despite relying on a simpler mechanism.
+These results reinforce that Chebyshev-based adaptive weights con-
+stitute a simple, interpretable, and competitive alternative to more 
+complex input-dependent architectures.
+6. Future directions
+Our results demonstrate the potential of input-dependent adaptive 
+weights for improving generalization and flexibility in neural networks. 
+Several important directions can extend this work further.
+6.1. Adaptive models for distribution shifts
+Because the Chebyshev neuron adjusts weights continuously based 
+on the input, it may be particularly well suited for out-of-distribution 
+(OOD) or covariate-shift settings. Future work could explore how adap-
+tive weighting affects robustness to dataset drift, noisy measurements, 
+adversarial perturbations, or domain adaptation scenarios. Evaluating 
+dynamic-weight architectures under distribution shifts remains an open 
+and promising research direction.
+6.2. Exploring alternative functional bases
+Although Chebyshev polynomials provide a strong combination of 
+stability, approximation power, and computational efficiency, other or-
+thogonal bases—such as Fourier, Legendre, or Hermite polynomials—
+may offer advantages for specific dataset characteristics (e.g., peri-
+odic structure, heavy tails, high imbalance). A systematic comparison 
+across decomposition families may reveal data-dependent criteria that 
+guide optimal basis selection, forming the foundation for automated 
+decomposition choice.
+6.3. Multivariate adaptive weights
+The current formulation uses univariate Chebyshev expansions for 
+each input dimension. Extending this to multivariate polynomial ex-
+pansions would allow modeling interactions directly among variables. 
+Multivariate Chebyshev series provide a principled way to approxi-
+mate functions 𝑓(𝑥1, … , 𝑥𝑑) through products of univariate polynomi-
+als. However, full multivariate expansions scale as (𝑘+ 1)𝑑 and quickly 
+become infeasible.
+6.4. Scalable interaction modeling via pairwise decomposition
+To manage the curse of dimensionality, a promising direction is to 
+approximate multivariate functions using pairwise Chebyshev decom-
+positions. Instead of modeling all 𝑑-way interactions, we approximate: 
+𝑓(𝑥1, … , 𝑥𝑑) ≈
+∑
+𝑖<𝑗
+𝑔𝑖𝑗(𝑥𝑖, 𝑥𝑗)
+(8)
+where each 𝑔𝑖𝑗 is represented through a 2D Chebyshev expansion. This 
+reduces parameter growth from (𝑘+ 1)𝑑 to 𝑂(𝑑2𝑘2), while still cap-
+turing rich variable interactions. Stacking such pairwise layers creates 
+a hierarchy of interaction terms (illustrated in Appendix H), enabling 
+scalable approximation of high-dimensional functions. Future work 
+could develop neural architectures that integrate these pairwise expan-
+sions as structured adaptive layers and train all coefficients through 
+backpropagation.
+6.5. Efficient high-dimensional approximation
+Further efficiency gains may be obtained through:
+• sparse or low-rank parameterizations of polynomial coefficients,
+• learning which feature pairs require decomposition (feature selec-
+tion),
+• adaptive depth for hierarchical pairwise combinations,
+• compressive techniques such as tensor-train or CP decomposition 
+applied to Chebyshev coefficients.
+Integrating these strategies would enable high-order adaptive mod-
+els at scale, opening the door to expressive yet computationally tractable 
+architectures for tabular, vision, and scientific datasets. A more detailed 
+review of the possible future work can be found in Appendix H.
+7. Conclusion
+This paper introduces an adaptive neural network model utilizing 
+Chebyshev polynomials to achieve input-dependent weighting, emu-
+lating biological adaptability and enhancing the network’s ability to 
+capture complex, non-linear patterns. Empirical evaluation on 145 
+datasets from the PMLB benchmark reveals that the Chebyshev model 
+outperforms traditional Multi-Layer Perceptrons (MLP) in 74% of cases, 
+achieving a mean accuracy of 84.13% versus 80.87% for MLP, with 
+the highest accuracy gain reaching 26.83%. Pruning further enhances 
+AI Open 7 (2026) 1–17 
+7 
+A. Islam et al.
+efficiency, achieving up to 90% compression without sacrificing per-
+formance. This adaptable framework shows promise in handling high-
+dimensional and out-of-distribution data, making it broadly applicable 
+in areas with complex data dependencies, like healthcare and finance. 
+Overall, this Chebyshev-based adaptive approach provides a flexible 
+and efficient alternative to fixed-weight neural architectures, paving 
+the way for future research into other orthogonal decompositions and 
+high-dimensional adaptive models.
+CRediT authorship contribution statement
+Ashhadul Islam: Writing – review & editing, Writing – origi-
+nal draft, Visualization, Software, Methodology, Investigation, For-
+mal analysis, Conceptualization. Abdesselam Bouzerdoum: Supervi-
+sion, Project administration, Investigation, Conceptualization. Samir 
+Brahim Belhaouari: Writing – review & editing, Writing – original 
+draft, Visualization, Resources, Project administration, Methodology, 
+Formal analysis, Conceptualization.
+Declaration of competing interest
+The authors declare that they have no known competing finan-
+cial interests or personal relationships that could have appeared to 
+influence the work reported in this paper.
+Acknowledgments
+Open Access funding provided by the Qatar National Library.
+Appendix A. Properties of chebyshev polynomials
+Chebyshev polynomials are a sequence of orthogonal polynomials 
+that arise in various fields of applied mathematics, including approx-
+imation theory and numerical analysis. They are particularly useful 
+in scenarios that involve minimizing the maximum error between a 
+function and its polynomial approximation, making them well-suited 
+for tasks requiring efficient and accurate representations of complex 
+functions. The key properties of Chebyshev polynomials, particularly 
+those of the first kind 𝑇𝑗(𝑥), which are used in our adaptive neuron 
+model (Mason and Handscomb, 2002), include the following:
+A.1. Recursive definition
+Chebyshev polynomials of the first kind, denoted 𝑇𝑗(𝑥), can be 
+defined recursively. The first two polynomials in the sequence are:
+𝑇0(𝑥) = 1
+𝑇1(𝑥) = 𝑥
+For 𝑗≥2, the polynomials follow the recursive relation:
+𝑇𝑗(𝑥) = 2𝑥⋅𝑇𝑗−1(𝑥) −𝑇𝑗−2(𝑥)
+This recursive definition (Mason and Handscomb, 2002) allows for 
+efficient computation of higher-order polynomials and facilitates their 
+integration into the adaptive neuron framework without significantly 
+increasing computational overhead.
+A.2. Orthogonality
+One of the key features of Chebyshev polynomials is their orthog-
+onality with respect to the weight function 
+1
+√
+1−𝑥2  over the interval 
+[−1, 1] (Mason and Handscomb, 2002). Specifically, for 𝑗≠𝑚:
+∫
+1
+−1
+𝑇𝑗(𝑥)𝑇𝑚(𝑥)
+𝑑𝑥
+√
+1 −𝑥2
+= 0
+Orthogonality ensures that the polynomials represent independent 
+components of the input, which can lead to better representation and 
+learning of complex, high-dimensional input data in neural networks. 
+In the context of our model, the orthogonality property aids in reducing 
+redundancy in the neuron’s response to varying inputs (Mason and 
+Handscomb, 2002).
+A.3. Extremal properties
+Chebyshev polynomials are known for minimizing the maximum 
+deviation from zero over the interval [−1, 1]. This extremal property 
+makes them particularly effective in approximating functions with high 
+accuracy while keeping the coefficients well-behaved. This feature is 
+highly desirable in neural networks, as it can help prevent overfitting 
+by providing smooth, well-distributed weights across inputs (Mason 
+and Handscomb, 2002; Trefethen, 2019; Rivlin, 1990).
+A.4. Equioscillation and roots
+The roots of the Chebyshev polynomials of the first kind, 𝑇𝑗(𝑥), are 
+located at:
+𝑥𝑘= cos
+((2𝑘−1)𝜋
+2𝑗
+)
+for
+𝑘= 1, 2, … , 𝑗
+These roots are distributed symmetrically in the interval [−1, 1]
+and are used in approximation theory to achieve optimal interpo-
+lation. In our adaptive neuron model, the roots of the Chebyshev 
+polynomials provide a natural way to discretize and sample the input 
+space, allowing for dynamic adjustment of weights based on input 
+intensities (Mason and Handscomb, 2002; Trefethen, 2019; Rivlin, 
+1990).
+A.5. Rapid growth outside of [−1, 1]
+While Chebyshev polynomials are well-behaved within the interval 
+[−1, 1], their values grow rapidly for inputs outside this interval. This 
+behavior can be controlled within our model by normalizing the inputs 
+or using a transformation that ensures the input remains in the range 
+where the polynomials are stable. This is critical in ensuring that 
+the adaptive weights do not become overly sensitive to out-of-range 
+inputs, thereby preserving the stability and robustness of the neuron’s 
+output (Boyd, 2001; Mason and Handscomb, 2002; Trefethen, 2019; 
+Rivlin, 1990).
+A.6. Approximation power
+Chebyshev polynomials are widely recognized for their superior 
+approximation properties, especially when compared to other polyno-
+mials such as Legendre or Laguerre. The series expansion in terms 
+of Chebyshev polynomials is often used in Chebyshev approximation 
+to achieve a near-optimal polynomial approximation of continuous 
+functions. In our model, this approximation power translates into the 
+ability to represent complex, non-linear relationships between the in-
+put and the neuron’s response, enabling more nuanced and flexible 
+learning (Mason and Handscomb, 2002; Trefethen, 2019; Rivlin, 1990).
+Appendix B. Distribution of weight for different datasets
+In this section, we examine the adaptive value of the neural network 
+parameters with changing inputs. After training a Chebyshev adaptive 
+model, we pass input values within the range of −1 to 1 and observe the 
+corresponding adaptive weight values. These values are then plotted 
+to illustrate how the weights respond to varying inputs, enhancing the 
+model’s capacity for tasks such as classification. The curve shapes in 
+these plots indicate that the adaptive weights effectively respond to 
+input variations, enabling improved performance in downstream tasks.
+Figs. B.9, B.10, B.11 and B.12 depict the adaptive weight dis-
+tribution for the contraceptive, led7, and mfeat_morphological datasets, 
+respectively. These figures highlight the smooth response of weights 
+to the input variations, supporting the model’s improved classification 
+capabilities and flexibility.
+AI Open 7 (2026) 1–17 
+8 
+A. Islam et al.
+Fig. B.9. Adaptive weight distribution for the contraceptive dataset, showing 
+the weight’s smooth variation with input values, reflecting its adaptive behav-
+ior.
+Fig. B.10. Adaptive weight distribution for the led7 dataset, illustrating the 
+responsive nature of weights to input changes within the Chebyshev adaptive 
+model.
+Fig. B.11. Adaptive weight behavior for the ‘‘yeast’’ dataset.
+Fig. B.12. Adaptive weight distribution for the mfeat_morphological dataset, 
+demonstrating the input-dependent weight adaptation in the model.
+Appendix C. Decision boundaries for different datasets
+In addition to the decision boundaries shown in the main paper, 
+we provide a comparison of decision boundaries between the MLP 
+and Chebyshev adaptive neural networks across various datasets. We 
+include both binary and multiclass datasets to illustrate the Chebyshev 
+model’s superior ability to capture complex, non-linear boundaries. 
+This is evident in the visualizations where the Chebyshev adaptive neu-
+ral network significantly outperforms the MLP, particularly in datasets 
+with intricate class distributions. All decision boundary visualizations 
+follow a consistent layout: the top row displays the true class distri-
+bution, the MLP boundary, and the Chebyshev boundary, while the 
+bottom row highlights misclassified points for each model (shown in 
+pink). Figs. C.13–C.19 apply this structure across several binary and 
+multiclass datasets.
+Fig. C.13. Comparison of decision boundaries on the ‘‘Tokyo1’’ dataset.
+Fig. C.14. Comparison of decision boundaries on the ‘‘SAHeart’’ dataset.
+Fig. C.15. Decision boundaries comparison on the ‘‘Hill Valley without Noise’’ 
+dataset.
+Fig. C.16. Decision boundaries on the ‘‘Flags’’ dataset.
+Fig. C.17. Decision boundary comparison on the ‘‘CMC’’ dataset.
+AI Open 7 (2026) 1–17 
+9 
+A. Islam et al.
+Fig. C.18. Comparison of decision boundaries on the ‘‘Clean2’’ dataset.
+Fig. C.19. Decision boundaries for the ‘‘Wine Quality White’’ dataset.
+These figures collectively demonstrate the Chebyshev model’s supe-
+riority in developing precise decision boundaries, especially in datasets 
+with complex, non-linear separations between classes.
+Appendix D. Complete dataset description
+Table D.5 summarizes the characteristics of all datasets, including 
+sample size, feature dimensionality, and number of classes.
+Table D.5
+Summary of all PMLB datasets used in our experiments, including dataset size, 
+number of features, and number of target classes.
+ Dataset Name
+Size
+Num of 
+Features
+Num of 
+Classes
+ adult
+29 305
+14
+2
+ 
+ agaricus lepiota
+4887
+22
+2
+ 
+ allbp
+2263
+29
+3
+ 
+ allhyper
+2262
+29
+4
+ 
+ allhypo
+2262
+29
+3
+ 
+ allrep
+2263
+29
+4
+ 
+ analcatdata aids
+30
+4
+2
+ 
+ analcatdata asbestos
+49
+3
+2
+ 
+ analcatdata authorship
+504
+70
+4
+ 
+ analcatdata bankruptcy
+30
+6
+2
+ 
+ analcatdata boxing1
+72
+3
+2
+ 
+ analcatdata boxing2
+79
+3
+2
+ 
+ analcatdata creditscore
+60
+6
+2
+ 
+ analcatdata cyyoung8092
+58
+10
+2
+ 
+ analcatdata cyyoung9302
+55
+10
+2
+ 
+ analcatdata dmft
+478
+4
+6
+ 
+ analcatdata fraud
+25
+11
+2
+ 
+ analcatdata germangss
+240
+5
+4
+ 
+ analcatdata happiness
+36
+3
+3
+ 
+ analcatdata japansolvent
+31
+9
+2
+ 
+ analcatdata lawsuit
+158
+4
+2
+ 
+ ann thyroid
+4320
+21
+3
+ 
+ appendicitis
+63
+7
+2
+ 
+ 
+(continued on next page)
+Table D.5 (continued).
+ Dataset Name
+Size
+Num of 
+Features
+Num of 
+Classes
+ australian
+414
+14
+2
+ 
+ auto
+121
+25
+5
+ 
+ backache
+108
+32
+2
+ 
+ balance scale
+375
+4
+3
+ 
+ biomed
+125
+8
+2
+ 
+ breast
+419
+10
+2
+ 
+ breast cancer
+171
+9
+2
+ 
+ breast cancer wisconsin
+341
+30
+2
+ 
+ breast w
+419
+9
+2
+ 
+ buggyCrx
+414
+15
+2
+ 
+ bupa
+207
+5
+2
+ 
+ calendarDOW
+239
+32
+5
+ 
+ car
+1036
+6
+4
+ 
+ car evaluation
+1036
+21
+4
+ 
+ cars
+235
+8
+3
+ 
+ chess
+1917
+36
+2
+ 
+ churn
+3000
+20
+2
+ 
+ clean1
+285
+168
+2
+ 
+ clean2
+3958
+168
+2
+ 
+ cleve
+181
+13
+2
+ 
+ cleveland
+181
+13
+5
+ 
+ cleveland nominal
+181
+7
+5
+ 
+ cmc
+883
+9
+3
+ 
+ coil2000
+5893
+85
+2
+ 
+ colic
+220
+22
+2
+ 
+ collins
+291
+23
+13
+ 
+ connect 4
+40 534
+42
+3
+ 
+ contraceptive
+883
+9
+3
+ 
+ corral
+96
+6
+2
+ 
+ credit a
+414
+15
+2
+ 
+ credit g
+600
+20
+2
+ 
+ crx
+414
+15
+2
+ 
+ dermatology
+219
+34
+6
+ 
+ diabetes
+460
+8
+2
+ 
+ dis
+2263
+29
+2
+ 
+ dna
+1911
+180
+3
+ 
+ ecoli
+196
+7
+5
+ 
+ fars
+60 580
+29
+8
+ 
+ flags
+106
+43
+5
+ 
+ flare
+639
+10
+2
+ 
+ GAMETES Epistasis 2 Way 1000atts 0.4H EDM 1 
+EDM 1 1
+960
+1000
+2
+ 
+ GAMETES Epistasis 2 Way 20atts 0.1H EDM 1 1
+960
+20
+2
+ 
+ GAMETES Epistasis 2 Way 20atts 0.4H EDM 1 1
+960
+20
+2
+ 
+ GAMETES Epistasis 3 Way 20atts 0.2H EDM 1 1
+960
+20
+2
+ 
+ GAMETES Heterogeneity 20atts 1600 Het 0.4 0.2 
+50 EDM 2 001
+960
+20
+2
+ 
+ GAMETES Heterogeneity 20atts 1600 Het 0.4 0.2 
+75 EDM 2 001
+960
+20
+2
+ 
+ german
+600
+20
+2
+ 
+ glass
+123
+9
+5
+ 
+ glass2
+97
+9
+2
+ 
+ haberman
+183
+3
+2
+ 
+ hayes roth
+96
+4
+3
+ 
+ heart c
+181
+13
+2
+ 
+ heart h
+176
+13
+2
+ 
+ heart statlog
+162
+13
+2
+ 
+ hepatitis
+93
+19
+2
+ 
+ Hill Valley with noise
+727
+100
+2
+ 
+ Hill Valley without noise
+727
+100
+2
+ 
+ horse colic
+220
+22
+2
+ 
+ house votes 84
+261
+16
+2
+ 
+ hungarian
+176
+13
+2
+ 
+ hypothyroid
+1897
+25
+2
+ 
+ ionosphere
+210
+34
+2
+ 
+ iris
+90
+4
+3
+ 
+ irish
+300
+5
+2
+ 
+ kr vs kp
+1917
+36
+2
+ 
+ krkopt
+16 833
+6
+18
+ 
+ led24
+1920
+24
+10
+ 
+ led7
+1920
+7
+10
+ 
+ letter
+12 000
+16
+26
+ 
+ 
+(continued on next page)
+AI Open 7 (2026) 1–17 
+10 
+A. Islam et al.
+Table D.5 (continued).
+ Dataset Name
+Size
+Num of 
+Features
+Num of 
+Classes
+ mfeat factors
+1200
+216
+10
+ 
+ mfeat fourier
+1200
+76
+10
+ 
+ mfeat karhunen
+1200
+64
+10
+ 
+ mfeat morphological
+1200
+6
+10
+ 
+ mfeat zernike
+1200
+47
+10
+ 
+ mofn 3 7 10
+794
+10
+2
+ 
+ monk1
+333
+6
+2
+ 
+ monk2
+360
+6
+2
+ 
+ monk3
+332
+6
+2
+ 
+ movement libras
+216
+90
+15
+ 
+ mushroom
+4874
+22
+2
+ 
+ new thyroid
+129
+5
+3
+ 
+ optdigits
+3372
+64
+10
+ 
+ page blocks
+3283
+10
+5
+ 
+ parity5+5
+674
+10
+2
+ 
+ penguins
+199
+7
+3
+ 
+ phoneme
+3242
+5
+2
+ 
+ pima
+460
+8
+2
+ 
+ prnn crabs
+120
+7
+2
+ 
+ prnn fglass
+123
+9
+5
+ 
+ prnn synth
+150
+2
+2
+ 
+ profb
+403
+9
+2
+ 
+ ring
+4440
+20
+2
+ 
+ saheart
+277
+9
+2
+ 
+ satimage
+3861
+36
+6
+ 
+ schizo
+204
+14
+3
+ 
+ segmentation
+1386
+19
+7
+ 
+ sleep
+63 544
+13
+5
+ 
+ solar flare 1
+189
+12
+5
+ 
+ solar flare 2
+639
+12
+6
+ 
+ sonar
+124
+60
+2
+ 
+ soybean
+405
+35
+18
+ 
+ spambase
+2760
+57
+2
+ 
+ spect
+160
+22
+2
+ 
+ spectf
+209
+44
+2
+ 
+ splice
+1912
+60
+3
+ 
+ tae
+90
+5
+3
+ 
+ texture
+3300
+40
+11
+ 
+ threeOf9
+307
+9
+2
+ 
+ tic tac toe
+574
+9
+2
+ 
+ tokyo1
+575
+44
+2
+ 
+ twonorm
+4440
+20
+2
+ 
+ vehicle
+507
+18
+4
+ 
+ vote
+261
+16
+2
+ 
+ vowel
+594
+13
+11
+ 
+ waveform 21
+3000
+21
+3
+ 
+ waveform 40
+3000
+40
+3
+ 
+ wdbc
+341
+30
+2
+ 
+ wine quality red
+959
+11
+6
+ 
+ wine quality white
+2938
+11
+7
+ 
+ wine recognition
+106
+13
+3
+ 
+ xd6
+583
+9
+2
+ 
+ yeast
+887
+8
+9
+ 
+Appendix E. Complete results
+Table E.6 reports the complete accuracy results for all datasets, 
+showing the performance of the Chebyshev Adaptive Model compared 
+with a standard MLP. The table lists, for each dataset, the Chebyshev 
+model accuracy, the MLP accuracy, and the difference between them 
+(positive values indicating Chebyshev outperforming MLP).
+Appendix F. Performance of pruned Chebyshev model
+Comparison of pruned Chebyshev adaptive neural networks with 
+standard MLPs across a variety of datasets. Table F.7 showcases ac-
+curacy gains achieved through pruning, with datasets organized by 
+decreasing levels of compression. Pruning was specifically applied to 
+networks where the unpruned Chebyshev model matched the accuracy 
+of the MLP, leading to notable improvements in accuracy and signifi-
+cant model compression, reaching up to  90% reduction in model size. 
+The columns present dataset names, MLP accuracy, pruned Chebyshev 
+model accuracy, and the achieved compression percentage.
+Appendix G. Computational efficiency analysis
+We measured the training time per batch and inference time per 
+batch for four neural architectures—
+• Multi-Layer Perceptron (MLP),
+• Attention-based (Vaswani et al., 2017) FCNN (AttentionFCNN),
+• Hypernetwork-based (Ha et al., 2016) FCNN (HyperFCNN), and
+• Chebyshev-enhanced FCNNs (ChebyFCNN) with polynomial or-
+ders k [2, 4, 6 and 8]
+across synthetic datasets of increasing feature dimensionality (4, 6, 9, 
+11, 16, 20, 35, and 90). Each result represents the average runtime for 
+a single batch over 30 repetitions, after warm-up iterations, measured 
+separately for training (forward + backward + update) and inference 
+(forward only).
+G.1. Training time
+MLPs were consistently the most efficient, requiring only  0.00016–
+0.00023 s per batch across all feature sizes. As seen in Fig. G.20 at 90 
+features, AttentionFCNNs trained about 1.9× slower than MLPs, Hyper-
+FCNNs about 2.3×, and Chebyshev models scaled more steeply with 
+polynomial order: 1.7× (k=2), 2.8× (k=4), 4.0× (k=6), and 5.4× (k=8) 
+compared to MLPs.
+G.2. Inference time
+A similar trend was observed for inference as seen in Fig. G.21. 
+MLPs completed forward passes in  0.000015–0.000019 s. At 90 fea-
+tures, AttentionFCNNs were 3.8× slower, HyperFCNNs 6.7× slower, 
+while Chebyshev variants ranged from 6.8× (k=2) to 23.9× (k=8) 
+slower than MLPs.
+These results highlight clear efficiency trade-offs.
+• MLPs provide unmatched speed but no dynamic input-dependent 
+computation.
+• Attention and Hypernetworks introduce modest overheads while 
+enriching adaptability.
+• Chebyshev-based networks incur substantially higher computa-
+tional cost, particularly at larger orders, due to repeated polyno-
+mial expansions and feature interactions.
+Nevertheless, these figures highlight the trade-off between the com-
+putational efficiency of MLPs and the expressive adaptability of
+Chebyshev-based neurons, justifying their increased runtime when 
+richer input-conditioned representations are desired.
+Appendix H. Future directions
+Future work could explore the application of adaptive weights in 
+out-of-distribution scenarios, focusing on their potential to enhance 
+model resilience and improve generalization beyond standard datasets. 
+Additionally, alternative decomposition methods, such as Fourier, Leg-
+endre, and Hermite polynomials, could be investigated to assess how 
+different decomposition techniques impact model performance across 
+various dataset characteristics. By examining these alternatives, re-
+search could identify which decomposition types are best suited for spe-
+cific dataset attributes, including class count, class imbalance, and data 
+distribution properties, thereby enabling more targeted applications of 
+adaptive models.
+For functions involving multiple variables, 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑), Cheby-
+shev decomposition can be extended to higher dimensions through a 
+multivariate Chebyshev series expansion. This approach  approximates 
+AI Open 7 (2026) 1–17 
+11 
+A. Islam et al.
+Table E.6
+Comparison of Chebyshev Adaptive Model and MLP Accuracy Across Datasets.
+ Dataset Name
+Chebyshev Adaptive 
+Model Accuracy
+MLP Accuracy
+Difference 
+(Chebyshev - MLP)
+ auto
+75.61
+48.78
+26.829
+ 
+ vowel
+86.869
+60.606
+26.263
+ 
+ analcatdata fraud
+88.889
+66.667
+22.222
+ 
+ soybean
+84.444
+62.963
+21.481
+ 
+ tic tac toe
+98.438
+79.167
+19.271
+ 
+ letter
+54.475
+36.05
+18.425
+ 
+ movement libras
+58.333
+43.056
+15.278
+ 
+ ring
+97.703
+84.662
+13.041
+ 
+ car
+96.532
+83.815
+12.717
+ 
+ hayes roth
+81.25
+68.75
+12.5
+ 
+ analcatdata boxing2
+88.889
+77.778
+11.111
+ 
+ ecoli
+90.909
+80.303
+10.606
+ 
+ analcatdata cyyoung9302
+94.737
+84.211
+10.526
+ 
+ analcatdata cyyoung8092
+95
+85
+10
+ 
+ analcatdata aids
+50
+40
+10
+ 
+ sonar
+88.095
+78.571
+9.524
+ 
+ analcatdata japansolvent
+90.909
+81.818
+9.091
+ 
+ connect 4
+79.677
+70.634
+9.044
+ 
+ mfeat zernike
+79.75
+71
+8.75
+ 
+ analcatdata boxing1
+91.667
+83.333
+8.333
+ 
+ analcatdata happiness
+58.333
+50
+8.333
+ 
+ monk1
+100
+91.964
+8.036
+ 
+ calendarDOW
+51.25
+43.75
+7.5
+ 
+ hungarian
+74.576
+67.797
+6.78
+ 
+ solar flare 1
+77.777
+71.429
+6.349
+ 
+ collins
+96.907
+90.722
+6.186
+ 
+ glass2
+75.758
+69.697
+6.061
+ 
+ analcatdata asbestos
+88.235
+82.353
+5.882
+ 
+ backache
+94.444
+88.889
+5.556
+ 
+ texture
+95.636
+90.091
+5.545
+ 
+ krkopt
+39.273
+34.141
+5.132
+ 
+ mfeat karhunen
+81.75
+76.75
+5
+ 
+ Hill Valley with noise
+78.189
+73.251
+4.938
+ 
+ cleveland
+62.295
+57.377
+4.918
+ 
+ appendicitis
+100
+95.455
+4.545
+ 
+ parity5+5
+100
+95.556
+4.444
+ 
+ splice
+90.439
+86.05
+4.389
+ 
+ phoneme
+83.349
+79.093
+4.255
+ 
+ mfeat factors
+92.5
+88.25
+4.25
+ 
+ spect
+87.037
+83.333
+3.704
+ 
+ breast cancer
+86.207
+82.759
+3.448
+ 
+ cleve
+86.885
+83.607
+3.279
+ 
+ heart c
+80.328
+77.049
+3.279
+ 
+ GAMETES Epistasis 2 Way 20atts 
+0.4H EDM 1 1
+75.938
+72.813
+3.125
+ 
+ penguins
+98.507
+95.522
+2.985
+ 
+ schizo
+61.765
+58.824
+2.941
+ 
+ flags
+52.777
+50
+2.777
+ 
+ mfeat morphological
+74.25
+71.5
+2.75
+ 
+ GAMETES Epistasis 2 Way 
+1000atts 0.4H EDM 1 EDM 1 1
+55
+52.5
+2.5
+ 
+ GAMETES Heterogeneity 20atts 
+1600 Het 0.4 0.2 75 EDM 2 001
+76.25
+73.75
+2.5
+ 
+ analcatdata germangss
+37.5
+35
+2.5
+ 
+ optdigits
+87.633
+85.142
+2.491
+ 
+ glass
+73.171
+70.732
+2.439
+ 
+ balance scale
+94.4
+92
+2.4
+ 
+ satimage
+87.334
+85.004
+2.33
+ 
+ saheart
+79.569
+77.419
+2.15
+ 
+ led24
+67.656
+65.625
+2.031
+ 
+ yeast
+58.446
+56.419
+2.027
+ 
+ mfeat fourier
+71.75
+69.75
+2
+ 
+ prnn synth
+88
+86
+2
+ 
+ credit g
+73.5
+71.5
+2
+ 
+ segmentation
+96.97
+95.022
+1.948
+ 
+ wine quality white
+55.204
+53.265
+1.939
+ 
+ heart statlog
+90.741
+88.889
+1.852
+ 
+ vehicle
+79.412
+77.647
+1.765
+ 
+ monk2
+100
+98.347
+1.653
+ 
+ cleveland nominal
+60.656
+59.016
+1.639
+ 
+ solar flare 2
+77.77
+76.19
+1.58
+ 
+ 
+(continued on next page)
+AI Open 7 (2026) 1–17 
+12 
+A. Islam et al.
+Table E.6 (continued).
+ Dataset Name
+Chebyshev Adaptive 
+Model Accuracy
+MLP Accuracy
+Difference 
+(Chebyshev - MLP)
+ profb
+71.111
+69.629
+1.482
+ 
+ crx
+91.304
+89.855
+1.449
+ 
+ car evaluation
+97.399
+95.954
+1.445
+ 
+ spectf
+82.857
+81.429
+1.429
+ 
+ dna
+93.73
+92.32
+1.411
+ 
+ colic
+90.541
+89.189
+1.351
+ 
+ horse colic
+86.486
+85.135
+1.351
+ 
+ cars
+82.278
+81.013
+1.266
+ 
+ analcatdata dmft
+24.375
+23.125
+1.25
+ 
+ GAMETES Heterogeneity 20atts 
+1600 Het 0.4 0.2 50 EDM 2 001
+72.5
+71.25
+1.25
+ 
+ GAMETES Epistasis 2 Way 20atts 
+0.1H EDM 1 1
+68.125
+66.875
+1.25
+ 
+ vote
+95.402
+94.252
+1.15
+ 
+ sleep
+74.011
+72.982
+1.029
+ 
+ threeOf9
+99.029
+98.058
+0.971
+ 
+ wdbc
+99.123
+98.246
+0.877
+ 
+ Hill Valley without noise
+67.901
+67.078
+0.823
+ 
+ allrep
+98.14
+97.35
+0.79
+ 
+ credit a
+84.783
+84.057
+0.726
+ 
+ australian
+89.13
+88.406
+0.725
+ 
+ buggyCrx
+91.304
+90.58
+0.724
+ 
+ breast w
+99.286
+98.571
+0.714
+ 
+ contraceptive
+58.983
+58.305
+0.678
+ 
+ allbp
+97.483
+96.821
+0.662
+ 
+ pima
+79.221
+78.571
+0.649
+ 
+ adult
+85.935
+85.393
+0.543
+ 
+ tokyo1
+93.75
+93.229
+0.521
+ 
+ german
+74
+73.5
+0.5
+ 
+ twonorm
+98.243
+97.837
+0.406
+ 
+ churn
+93.2
+92.8
+0.4
+ 
+ cmc
+57.627
+57.288
+0.339
+ 
+ hypothyroid
+97.946
+97.63
+0.316
+ 
+ GAMETES Epistasis 3 Way 20atts 
+0.2H EDM 1 1
+55
+54.688
+0.313
+ 
+ wine quality red
+58.125
+57.813
+0.313
+ 
+ led7
+68.75
+68.438
+0.313
+ 
+ waveform 40
+86.6
+86.3
+0.3
+ 
+ allhypo
+95.093
+94.828
+0.265
+ 
+ dis
+98.278
+98.013
+0.265
+ 
+ fars
+78.028
+77.795
+0.233
+ 
+ page blocks
+94.977
+94.795
+0.183
+ 
+ ann thyroid
+98.888
+98.75
+0.138
+ 
+ new thyroid
+97.674
+97.674
+0
+ 
+ biomed
+92.857
+92.857
+0
+ 
+ flare
+84.579
+84.579
+0
+ 
+ bupa
+57.971
+57.971
+0
+ 
+ house votes 84
+98.851
+98.851
+0
+ 
+ analcatdata lawsuit
+96.226
+96.226
+0
+ 
+ mofn 3 7 10
+100
+100
+0
+ 
+ heart h
+83.051
+83.051
+0
+ 
+ agaricus lepiota
+100
+100
+0
+ 
+ analcatdata bankruptcy
+100
+100
+0
+ 
+ ionosphere
+92.958
+92.958
+0
+ 
+ irish
+100
+100
+0
+ 
+ monk3
+98.198
+98.198
+0
+ 
+ kr vs kp
+99.531
+99.531
+0
+ 
+ wine recognition
+100
+100
+0
+ 
+ hepatitis
+90.323
+90.323
+0
+ 
+ iris
+100
+100
+0
+ 
+ clean2
+100
+100
+0
+ 
+ tae
+67.742
+67.742
+0
+ 
+ prnn fglass
+70.732
+70.732
+0
+ 
+ corral
+100
+100
+0
+ 
+ xd6
+100
+100
+0
+ 
+ coil2000
+93.893
+93.893
+0
+ 
+ breast cancer wisconsin
+98.246
+98.246
+0
+ 
+ chess
+99.531
+99.531
+0
+ 
+ analcatdata creditscore
+95
+95
+0
+ 
+ haberman
+77.419
+77.419
+0
+ 
+ prnn crabs
+100
+100
+0
+ 
+ allhyper
+98.278
+98.278
+0
+ 
+ mushroom
+100
+100
+0
+ 
+ breast
+100
+100
+0
+ 
+ 
+(continued on next page)
+AI Open 7 (2026) 1–17 
+13 
+A. Islam et al.
+Table E.6 (continued).
+ Dataset Name
+Chebyshev Adaptive 
+Model Accuracy
+MLP Accuracy
+Difference 
+(Chebyshev - MLP)
+ waveform 21
+87.4
+87.4
+0
+ 
+ spambase
+94.354
+94.354
+0
+ 
+ diabetes
+80.519
+80.519
+0
+ 
+ analcatdata authorship
+99.408
+99.408
+0
+ 
+ clean1
+100
+100
+0
+ 
+ dermatology
+97.297
+97.297
+0
+ 
+Table F.7
+Accuracy and compression of pruned Chebyshev models compared to MLPs.
+ Dataset
+MLP Accuracy
+Pruned Chebyshev Accuracy
+Compression 
+ wdbc
+98.246
+99.123
+89.2
+ 
+ credit a
+84.057
+84.783
+89.1
+ 
+ tokyo1
+93.229
+93.75
+86.3
+ 
+ breast
+100
+100
+85.8
+ 
+ pima
+78.571
+79.221
+82.9
+ 
+ cmc
+57.288
+57.627
+80.3
+ 
+ cleveland nominal
+59.016
+60.656
+79.7
+ 
+ GAMETES Heterogeneity 20atts 
+1600 Het 0.4 0.2 75 EDM 2 001
+73.75
+76.25
+77.5
+ 
+ GAMETES Epistasis 2 Way 20atts 
+0.1H EDM 1 1
+66.875
+68.125
+75.3
+ 
+ contraceptive
+58.305
+58.983
+74.2
+ 
+ buggyCrx
+90.58
+91.304
+74
+ 
+ heart statlog
+88.889
+90.741
+73.8
+ 
+ profb
+69.629
+71.111
+69.5
+ 
+ cleve
+83.607
+86.885
+66.7
+ 
+ flags
+50
+52.777
+66.6
+ 
+ colic
+89.189
+90.541
+61
+ 
+ GAMETES Epistasis 2 Way 
+1000atts 0.4H EDM 1 EDM 1 1
+52.5
+55
+57.6
+ 
+ GAMETES Heterogeneity 20atts 
+1600 Het 0.4 0.2 50 EDM 2 001
+71.25
+72.5
+56.7
+ 
+ Hill Valley with noise
+73.251
+78.189
+55.2
+ 
+ saheart
+77.419
+79.569
+52
+ 
+ analcatdata asbestos
+82.353
+88.235
+49
+ 
+ german
+73.5
+74
+48.1
+ 
+ breast cancer
+82.759
+86.207
+46
+ 
+Fig. G.20. Training time per batch for MLP, AttentionFCNN, HyperFCNN, and ChebyFCNN with polynomial orders k = 2, 4, 6, 8 across datasets of varying 
+feature dimensionality (4–90). MLPs achieve consistently minimal training costs, while Chebyshev-based models scale in runtime with both input dimensionality 
+and polynomial order.
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) using products of univariate Chebyshev polynomials 
+for each variable, providing a powerful tool for multivariate function 
+approximation.
+The following is a step-by-step outline for decomposing a multivari-
+ate function using Chebyshev polynomials, which forms the foundation 
+for future exploration in high-dimensional adaptive networks.
+H.1. Steps for multivariate Chebyshev decomposition
+To extend Chebyshev decomposition to multivariate functions, we 
+start by defining the multivariate Chebyshev polynomial basis. For 𝑑
+dimensions, the basis functions are products of univariate Chebyshev 
+AI Open 7 (2026) 1–17 
+14 
+A. Islam et al.
+Fig. G.21. Inference time per batch for the same models and settings. MLPs are nearly instantaneous, whereas AttentionFCNN and HyperFCNN add modest 
+overhead. Chebyshev-based models show significantly higher inference times, especially for larger orders, reflecting the computational expense of polynomial 
+feature expansions.
+polynomials for each variable, so for a given degree 𝑚𝑖 in each di-
+mension 𝑥𝑖, the basis function is 𝑇𝑚1,𝑚2,…,𝑚𝑑(𝑥1, 𝑥2, … , 𝑥𝑑) = 𝑇𝑚1(𝑥1)
+𝑇𝑚2(𝑥2) ⋯𝑇𝑚𝑑(𝑥𝑑), where 𝑇𝑚𝑖(𝑥𝑖) represents the Chebyshev polynomial 
+of degree 𝑚𝑖 in the 𝑖th variable, defined on [−1, 1]. If the domain of 
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) lies outside [−1, 1]𝑑, we map each variable 𝑥𝑖 from 
+[𝑎𝑖, 𝑏𝑖] to [−1, 1] using 𝑥′
+𝑖=
+2𝑥𝑖−(𝑎𝑖+𝑏𝑖)
+𝑏𝑖−𝑎𝑖
+, scaling and shifting 𝑥𝑖 so that 
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) is transformed to 𝑓(𝑥′
+1, 𝑥′
+2, … , 𝑥′
+𝑑) on [−1, 1]𝑑. We then 
+approximate 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) by a finite multivariate Chebyshev series:
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) ≈
+𝑀1
+∑
+𝑚1=0
+𝑀2
+∑
+𝑚2=0
+⋯
+𝑀𝑑
+∑
+𝑚𝑑=0
+𝑐𝑚1,𝑚2,…,𝑚𝑑𝑇𝑚1(𝑥1)𝑇𝑚2(𝑥2) ⋯𝑇𝑚𝑑(𝑥𝑑)
+(H.1)
+where 𝑐𝑚1,𝑚2,…,𝑚𝑑 are the Chebyshev coefficients. These coefficients are 
+calculated as 
+𝑐𝑚1,𝑚2,…,𝑚𝑑= 2𝑑
+𝜋𝑑∫
+1
+−1
+⋯∫
+1
+−1
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑)𝑇𝑚1(𝑥1) ⋯𝑇𝑚𝑑(𝑥𝑑)
+√
+1 −𝑥2
+1 ⋯
+√
+1 −𝑥2
+𝑑
+𝑑𝑥1 ⋯𝑑𝑥𝑑
+(H.2)
+but due to computational difficulty, these integrals are usually ap-
+proximated using Chebyshev nodes and discrete transforms. For each 
+variable 𝑥𝑖, we choose 𝑀𝑖+ 1 Chebyshev nodes as 𝑥(𝑘)
+𝑖
+= cos
+(
+(2𝑘+1)𝜋
+2(𝑀𝑖+1)
+)
+, 
+for 𝑘= 0, 1, … , 𝑀𝑖, and evaluate 𝑓 at each point on the resulting 
+(𝑀1 + 1) × (𝑀2 + 1) × ⋯× (𝑀𝑑+ 1) grid, yielding 
+𝑓𝑘1,𝑘2,…,𝑘𝑑= 𝑓
+(
+𝑥(𝑘1)
+1
+, 𝑥(𝑘2)
+2
+, … , 𝑥(𝑘𝑑)
+𝑑
+)
+(H.3)
+To find the coefficients 𝑐𝑚1,𝑚2,…,𝑚𝑑, we then apply a multidimen-
+sional Discrete Cosine Transform (DCT) to these sampled values. Fi-
+nally, the multivariate Chebyshev polynomial approximation for 𝑓(𝑥1,
+𝑥2, … , 𝑥𝑑) is constructed as 
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) ≈
+𝑀1
+∑
+𝑚1=0
+𝑀2
+∑
+𝑚2=0
+⋯
+𝑀𝑑
+∑
+𝑚𝑑=0
+𝑐𝑚1,𝑚2,…,𝑚𝑑𝑇𝑚1(𝑥1)𝑇𝑚2(𝑥2) ⋯𝑇𝑚𝑑(𝑥𝑑)
+(H.4)
+H.2. Example: 3D Chebyshev decomposition with pairwise combinations
+For a function of three variables, 𝑓(𝑥, 𝑦, 𝑧), a pairwise Chebyshev 
+decomposition can help in capturing interactions between pairs of 
+variables. This involves decomposing 𝑓(𝑥, 𝑦, 𝑧) as a sum of functions 
+of pairs of variables: 
+𝑓(𝑥, 𝑦, 𝑧) ≈
+𝑀
+∑
+𝑚=0
+𝑁
+∑
+𝑛=0
+𝑐(𝑥,𝑦)
+𝑚,𝑛𝑇𝑚(𝑥) 𝑇𝑛(𝑦)
++
+𝑀
+∑
+𝑚=0
+𝑃
+∑
+𝑝=0
+𝑐(𝑥,𝑧)
+𝑚,𝑝𝑇𝑚(𝑥) 𝑇𝑝(𝑧)
++
+𝑁
+∑
+𝑛=0
+𝑃
+∑
+𝑝=0
+𝑐(𝑦,𝑧)
+𝑛,𝑝𝑇𝑛(𝑦) 𝑇𝑝(𝑧)
+(H.5)
+where 𝑐(𝑥,𝑦)
+𝑚,𝑛, 𝑐(𝑥,𝑧)
+𝑚,𝑝, and 𝑐(𝑦,𝑧)
+𝑛,𝑝 are the Chebyshev coefficients for each 
+pairwise combination.
+H.3. Efficient multivariate function approximation using pairwise Cheby-
+shev decomposition
+We aim to classify a dataset with features 𝑥1, 𝑥2, … , 𝑥𝑑, with the 
+objective of predicting 𝑦 based on the function 𝑦= 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑). 
+The question is how to estimate the function 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑). Using 
+function decomposition, we can represent 𝑓(𝑥1, … , 𝑥𝑑) with orthogonal 
+functions 𝑇𝑚1,𝑚2,…,𝑚𝑑(𝑥1, … , 𝑥𝑑) as follows: 
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) =
+∞
+∑
+𝑚1=0
+∞
+∑
+𝑚2=0
+⋯
+∞
+∑
+𝑚𝑑=0
+𝑐𝑚1,𝑚2,…,𝑚𝑑𝑇𝑚1,𝑚2,…,𝑚𝑑(𝑥1, 𝑥2, … , 𝑥𝑑)
+(H.6)
+or 
+𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) ≈
+𝑘
+∑
+𝑚1=0
+⋯
+𝑘
+∑
+𝑚𝑑=0
+𝑐𝑚1,𝑚2,…,𝑚𝑑𝑇𝑚1,…,𝑚𝑑(𝑥1, 𝑥2, … , 𝑥𝑑)
+(H.7)
+Thus, we have (𝑘+1)𝑑 parameters to estimate. While this estimation 
+is feasible in low dimensions, the problem becomes significantly more 
+difficult as the dimensionality 𝑑 increases.
+H.4. Pairwise decomposition for dimensionality reduction
+In high-dimensional cases, direct multivariate Chebyshev decompo-
+sition can lead to an excessive number of parameters. To address this, 
+we propose a pairwise decomposition strategy to reduce the complexity 
+of approximation. Suppose we have a function 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) and 
+aim to classify or predict based on the features 𝑥1, 𝑥2, … , 𝑥𝑑. The goal 
+is to approximate 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) through orthogonal decomposition 
+AI Open 7 (2026) 1–17 
+15 
+A. Islam et al.
+Fig. H.22. Initial layer of the pairwise decomposition, illustrating the pairwise approximation of variables 𝑥1, 𝑥2, … , 𝑥𝑑.
+Fig. H.23. Intermediate layer showing further pairwise combinations to reduce parameter space complexity.
+Fig. H.24. Final aggregation layer where pairwise approximations are combined to form the complete approximation of 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑).
+using Chebyshev polynomials. Using Chebyshev decomposition, we 
+approximate 𝑓(𝑥1, 𝑥2, … , 𝑥𝑑) as: 
+𝑓(𝑥1, … , 𝑥𝑑) ≈
+𝑘
+∑
+𝑚1=0
+⋯
+𝑘
+∑
+𝑚𝑑=0
+𝑐𝑚1,…,𝑚𝑑𝑇𝑚1(𝑥1) ⋯𝑇𝑚𝑑(𝑥𝑑)
+(H.8)
+where 𝑇𝑚𝑖(𝑥𝑖) denotes the Chebyshev polynomial of degree 𝑚𝑖 for each 
+variable 𝑥𝑖. This expression involves (𝑘+1)𝑑 parameters, which becomes 
+computationally challenging as 𝑑 increases. To reduce dimensional-
+ity, we assume pairwise combinations of variables, simplifying the 
+expression by decomposing each pair: 
+𝑇𝑚1,𝑚2,…,𝑚𝑑(𝑥1, 𝑥2, … , 𝑥𝑑) =
+𝑑
+∏
+𝑖=1
+𝑇𝑚𝑖(𝑥𝑖)
+(H.9)
+We then approximate 𝑓(𝑥1, … , 𝑥𝑑) by summing over pairwise terms, 
+effectively reducing the parameter space. We calculate intermediate 
+outputs for each pairwise combination: 
+𝑦1,1 =
+𝑘
+∑
+𝑚1=0
+𝑐𝑚1𝑇𝑚1(𝑥1),
+𝑦2,1 =
+𝑘
+∑
+𝑚2=0
+𝑐𝑚2𝑇𝑚2(𝑥2)
+(H.10)
+and so forth, until the final output is obtained by aggregating 
+these pairwise decomposed terms. Through backpropagation, we esti-
+mate each coefficient 𝑐𝑖
+𝑗, balancing approximation accuracy with com-
+putational feasibility. This method is particularly suitable for high-
+dimensional data where computational efficiency is critical.
+In summary, Figs. H.22, H.23, and H.24 illustrate the use of pairwise 
+decomposition at each layer, which helps to handle the explosion of 
+parameters in high-dimensional approximation. This approach leads to 
+a final decomposition depth 𝑟+1 = log𝑒(𝑑), and backpropagation is used 
+to estimate each coefficient 𝑐𝑖
+𝑗, thereby enabling efficient and accurate 
+high-dimensional function approximation.
+References
+Bliss, T.V., Collingridge, G.L., 1993. A synaptic model of memory: long-term 
+potentiation in the hippocampus. Nature 361 (6407), 31–39.
+Bolukbasi, T., Wang, J., Dekel, O., Saligrama, V., 2017. Adaptive neural networks for 
+efficient inference. In: International Conference on Machine Learning. PMLR, pp. 
+527–536.
+Boyd, J.P., 2001. Chebyshev and Fourier spectral methods. Courier Corporation.
+Chen, Y., Dai, X., Liu, M., Chen, D., Yuan, L., Liu, Z., 2020. Dynamic convolution: 
+Attention over convolution kernels. In: Proceedings of the IEEE/CVF Conference 
+on Computer Vision and Pattern Recognition, 2020. pp. 11030–11039.
+Dai, J., Qi, H., Xiong, Y., Li, Y., Zhang, G., Hu, H., Wei, Y., 2017. Deformable 
+convolutional networks. In: Proceedings of the IEEE International Conference on 
+Computer Vision, ICCV 2017. pp. 764–773.
+Fang, W., Yu, Z., Chen, Y., Huang, T., Masquelier, T., Tian, Y., 2021. Deep resid-
+ual learning in spiking neural networks. Adv. Neural Inf. Process. Syst. 34, 
+21056–21069. http://dx.doi.org/10.48550/arXiv.2102.04159.
+Guo, Y., Huang, X., Ma, Z., 2023. Direct learning-based deep spiking neural networks: 
+a review. Front. Neurosci. 17, 1209795.
+Ha, D., Dai, A., Le, Q.V., 2016. Hypernetworks. URL: https://arxiv.org/abs/1609.09106 
+arXiv preprint arXiv:1609.09106.
+AI Open 7 (2026) 1–17 
+16 
+A. Islam et al.
+Han, B., Roy, K., 2020. Deep spiking neural network: Energy efficiency through time 
+based coding. In: European Conference on Computer Vision. Springer, pp. 388–404.
+Koch, C., 2004. Biophysics of Computation: Information Processing in Single Neurons. 
+Oxford University Press.
+Liu, Z., Wang, Y., Vaidya, S., Ruehle, F., Halverson, J., Soljačić, M., Hou, T.Y., 
+Tegmark, M., 2024. KAN: Kolmogorov-arnold networks. URL: https://arxiv.org/abs/
+2404.19756 arXiv preprint arXiv:2404.19756.
+Mason, J.C., Handscomb, D.C., 2002. Chebyshev Polynomials. Chapman and Hall/CRC.
+Olson, R.S., La Cava, W., Orzechowski, P., Urbanowicz, R.J., Moore, J.H., 2017. PMLB: 
+a large benchmark suite for machine learning evaluation and comparison. BioData 
+Mining 10 (36), 1–13. http://dx.doi.org/10.1186/s13040-017-0154-4.
+Rivlin, T.J., 1990. Chebyshev Polynomials. Dover (2020 reprint).
+Trefethen, L.N., 2019. Approximation Theory and Approximation Practice, Extended 
+Edition. SIAM.
+Troumbis, I.A., Tsekouras, G.E., Tsimikas, J., Kalloniatis, C., Haralambopoulos, D., 
+2020. A Chebyshev polynomial feedforward neural network trained by differential 
+evolution and its application in environmental case studies. Environ. Model. Softw. 
+126, 104663.
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A.N., Kaiser, Ł., 
+Polosukhin, I., 2017. Attention is all you need. Adv. Neural Inf. Process. Syst. 30.
+Yang, B., Bender, G., Le, Q.V., Ngiam, J., 2019. Condconv: Conditionally parameterized 
+convolutions for efficient inference. Adv. Neural Inf. Process. Syst. 32.
+Zambrano, D., Nusselder, R., Scholte, H.S., Bohté, S.M., 2019. Sparse computation in 
+adaptive spiking neural networks. Front. Neurosci. 12, 987.
+AI Open 7 (2026) 1–17 
+17 
